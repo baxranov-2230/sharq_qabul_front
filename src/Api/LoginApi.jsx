@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// const API_URL = 'http://127.0.0.1:8000';
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 import axiosInstance from "./axiosinstance";
@@ -24,7 +24,7 @@ export const saveTokens = (accessToken, refreshToken) => {
 
 export const LoginApi = async (loginDate) => {
     const response = await axios.post(
-        `${API_URL}/auth/login`,
+        `${API_URL}/api/auth/login`,
         new URLSearchParams({
             username: loginDate.username,
             password: loginDate.password,

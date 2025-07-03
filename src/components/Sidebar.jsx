@@ -36,41 +36,41 @@ function Sidebar({isOpen}) {
         );
     };
     let menuCategories;
-    if (userRole === "admin") {
+    // if (userRole === "admin") {
         menuCategories = [
             {
                 id: "main",
                 items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
             },
-            {
-                id: "list",
-                items: [
-                    {icon: FaList, label: "Qabul bo'lgan ", path: "/list-application"},
-                ],
-            },
-            {
-                id: "no_list",
-                items: [
-                    {icon: FaList, label: "Rad bo'lgan ", path: "/no-list-application"},
-                ],
-            },
+    //         {
+    //             id: "list",
+    //             items: [
+    //                 {icon: FaList, label: "Qabul bo'lgan ", path: "/list-application"},
+    //             ],
+    //         },
+    //         {
+    //             id: "no_list",
+    //             items: [
+    //                 {icon: FaList, label: "Rad bo'lgan ", path: "/no-list-application"},
+    //             ],
+    //         },
+    //     ];
+    // } else if (userRole === "student") {
+    //     menuCategories = [
+    //         {
+    //             id: "application",
+    //             items: [{icon: MdOutlinePostAdd, label: "Arizalar", path: "/application"}],
+    //         },
+    //         {
+    //             id: "rating",
+    //             items: [{icon: LuNotebookText, label: "Reyting daftarcha", path: "/rating"}],
+    //         },
+    //         {
+    //             id: "profile",
+    //             items: [{icon: CgProfile, label: "Profil", path: "/profile"}],
+    //         },
         ];
-    } else if (userRole === "student") {
-        menuCategories = [
-            {
-                id: "application",
-                items: [{icon: MdOutlinePostAdd, label: "Arizalar", path: "/application"}],
-            },
-            {
-                id: "rating",
-                items: [{icon: LuNotebookText, label: "Reyting daftarcha", path: "/rating"}],
-            },
-            {
-                id: "profile",
-                items: [{icon: CgProfile, label: "Profil", path: "/profile"}],
-            },
-        ];
-    }
+    // }
 
 
     return (

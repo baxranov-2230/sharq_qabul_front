@@ -6,7 +6,7 @@ import {
     // Button,
     Typography,
 } from "@material-tailwind/react";
-import Button from "@mui/material/Button";
+import { IMaskInput } from 'react-imask';
 import {useNavigate} from "react-router-dom";
 import toast from "react-hot-toast";
 import {useMutation} from "@tanstack/react-query";
@@ -14,12 +14,15 @@ import {replace, useFormik} from "formik";
 import * as Yup from "yup";
 import {LoginApi} from "../Api/LoginApi";
 import {LogIn} from 'lucide-react'
-import { GrHide } from "react-icons/gr";
-import { BiShow } from "react-icons/bi";
+import {GrHide} from "react-icons/gr";
+import {BiShow} from "react-icons/bi";
+
+import Logo from "../assets/images/logo.png";
+import Sharq from "../assets/images/sharq.jpg";
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    // const { login, isLoggedIn } = useAuthStore();
+
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePassword = () => {
@@ -49,7 +52,8 @@ export default function LoginPage() {
             password: "",
         },
         validationSchema: Yup.object({
-            username: Yup.string().required("email is required"),
+            username: Yup.string().required("Telefon raqami majburiy"),
+                // .matches(/^\+998\s\(\d{2}\)\s\d{3}-\d{2}-\d{2}$/, "Noto'g‘ri format"),
             password: Yup.string().required("password is required"),
         }),
         onSubmit: (values) => {
@@ -65,43 +69,41 @@ export default function LoginPage() {
             <div
                 className="bg-white rounded-lg shadow-lg w-full max-w-6xl h-[80%] md:h-[80%] flex flex-col md:flex-row overflow-hidden">
                 {/* Chap qism */}
-                <div className="md:w-1/2 bg-blue-600 text-white p-8 flex flex-col justify-center">
-                    <h2 className="text-3xl font-bold mb-4">Grantga ariza topshirish</h2>
-                    <p className="text-lg">
-                        Ushbu platforma orqali talabalar grant uchun ariza topshirishi
-                        mumkin. Natijalarni profil orqali kuzating.
-                    </p>
-                    <ul className="mt-6 list-disc pl-5 text-blue-100 text-sm space-y-2">
-                        <li>Profil orqali ariza topshiring</li>
-                        {/*<li>PDF hujjatlarni biriktiring</li>*/}
-                        <li>Holatni tekshirib boring</li>
-                    </ul>
+                <div className="relative w-0 md:w-1/2 flex  justify-center items-center bg-[#1c4c84] rounded-lg">
+                    <img src={Sharq} className="w-full h-[500px]  object-coverv  rounded-tl-lg rounded-bl-lg"
+                         alt=""/>
+                    <div
+                        className="absolute opacity-0 md:opacity-100 flex bottom-0 left-0 w-full bg-white/15 backdrop-blur-md px-4 py-6 justify-center border-t-2 rounded-bl-lg">
+                        <h2 className="text-white text-4xl md:text-4xl font-bold">Sharq universiteti</h2>
+                    </div>
                 </div>
                 {/* O‘ng qism */}
                 <div className="md:w-1/2 p-8 flex flex-col justify-center">
                     <div className="flex justify-center mb-6">
-                        <div className="bg-blue-500 p-3 rounded-full">
-                            <LogIn className="w-8 h-8 text-white"/>
-                        </div>
+                        <img src={Logo} className="w-44"/>
                     </div>
                     <h2 className="text-2xl font-bold text-center mb-6">
                         Kabinitga kirish
                     </h2>
 
-                    {/*<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">*/}
-
-                    {/*</div>*/}
 
                     <form onSubmit={formik.handleSubmit}>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-semibold mb-2">
                                 Username
                             </label>
-                            <input
-                                type="text"
+                            <IMaskInput
+                                mask="+{998}-00-000-00-00"
                                 name="username"
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                                {...formik.getFieldProps("username")}
+                                value={formik.values.username}
+                                onChange={(e) => {
+                                    // inputdan faqat raqamlarni ajratib olish
+                                    const onlyDigits = e.target.value.replace(/\D/g, '');
+                                    formik.setFieldValue("username", onlyDigits);
+                                }}
+                                onBlur={formik.handleBlur}
+                                className="border rounded px-3 py-2 w-full"
+                                placeholder="+998 (__) ___-__-__"
                                 required
                             />
                         </div>
@@ -109,22 +111,22 @@ export default function LoginPage() {
                             <label className="block text-gray-700 text-sm font-semibold mb-2">
                                 Password
                             </label>
-                           <div className="relative">
-                               <input
-                                   type={showPassword ? "text" : "password"}
-                                   name="password"
-                                   {...formik.getFieldProps("password")}
-                                   className=" w-full  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                                   required
-                               />
-                               <button
-                                   type="button"
-                                   onClick={togglePassword}
-                                   className="absolute right-2 top-3 text-xl items-center  text-blue-500"
-                               >
-                                   {showPassword ? <GrHide/> : <BiShow/>}
-                               </button>
-                           </div>
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    {...formik.getFieldProps("password")}
+                                    className=" w-full  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={togglePassword}
+                                    className="absolute right-2 top-3 text-xl items-center  text-blue-500"
+                                >
+                                    {showPassword ? <GrHide/> : <BiShow/>}
+                                </button>
+                            </div>
                         </div>
                         <button
                             type="submit"

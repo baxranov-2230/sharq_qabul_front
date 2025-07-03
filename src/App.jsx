@@ -6,28 +6,28 @@ import {
     useLocation, useNavigate, Navigate, Link,
 } from "react-router-dom";
 import {Menu as MenuIcon, Bell} from "lucide-react";
-import HemisLogo from "./components/HemisLogo";
-import Sidebar from "./components/Sidebar";
-import Dashboard from "./pages/Dashboard";
+import {jwtDecode} from "jwt-decode";
 
 import {Toaster} from "react-hot-toast";
 
-import LoginPage from "./pages/LoginPage.jsx";
+
 
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
 
-
-import Profile from "./pages/Profile.jsx";
+import HemisLogo from "./components/HemisLogo";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./pages/Dashboard";
+// import Profile from "./pages/Profile.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
 import {useQuery} from "@tanstack/react-query";
-import Applications from "./pages/Applications.jsx";
-import RatingBook from "./pages/RatingBook.jsx";
-import {UserMe} from "./Api/UserApi.jsx";
-import {jwtDecode} from "jwt-decode";
-import ListApplication from "./pages/ListApplication.jsx";
-import NoListApplication from "./pages/NoListApplication.jsx";
+// import Applications from "./pages/Applications.jsx";
+// import RatingBook from "./pages/RatingBook.jsx";
+// import {UserMe} from "./Api/UserApi.jsx";
+// import ListApplication from "./pages/ListApplication.jsx";
+// import NoListApplication from "./pages/NoListApplication.jsx";
 
 
 function ProtectedRoute({children}) {
@@ -56,10 +56,10 @@ function App() {
         }
     }, [localStorage.getItem("token")]);
 
-    const {isError, isSuccess, isLoading, data: student, error, refetch} = useQuery({
-        queryKey: ['userMe'],
-        queryFn: UserMe,
-    })
+    // const {isError, isSuccess, isLoading, data: student, error, refetch} = useQuery({
+    //     queryKey: ['userMe'],
+    //     queryFn: UserMe,
+    // })
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -171,46 +171,46 @@ function App() {
 
                         />
 
-                        <Route
-                            path="/profile"
-                            element={
-                                <ProtectedRoute>
-                                    <Profile/>
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/list-application"
-                            element={
-                                <ProtectedRoute>
-                                    <ListApplication/>
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/no-list-application"
-                            element={
-                                <ProtectedRoute>
-                                    <NoListApplication/>
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/rating"
-                            element={
-                                <ProtectedRoute>
-                                    <RatingBook/>
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/application"
-                            element={
-                                <ProtectedRoute>
-                                    <Applications/>
-                                </ProtectedRoute>
-                            }
-                        />
+                        {/*<Route*/}
+                        {/*    path="/profile"*/}
+                        {/*    element={*/}
+                        {/*        <ProtectedRoute>*/}
+                        {/*            <Profile/>*/}
+                        {/*        </ProtectedRoute>*/}
+                        {/*    }*/}
+                        {/*/>*/}
+                        {/*<Route*/}
+                        {/*    path="/list-application"*/}
+                        {/*    element={*/}
+                        {/*        <ProtectedRoute>*/}
+                        {/*            <ListApplication/>*/}
+                        {/*        </ProtectedRoute>*/}
+                        {/*    }*/}
+                        {/*/>*/}
+                        {/*<Route*/}
+                        {/*    path="/no-list-application"*/}
+                        {/*    element={*/}
+                        {/*        <ProtectedRoute>*/}
+                        {/*            <NoListApplication/>*/}
+                        {/*        </ProtectedRoute>*/}
+                        {/*    }*/}
+                        {/*/>*/}
+                        {/*<Route*/}
+                        {/*    path="/rating"*/}
+                        {/*    element={*/}
+                        {/*        <ProtectedRoute>*/}
+                        {/*            <RatingBook/>*/}
+                        {/*        </ProtectedRoute>*/}
+                        {/*    }*/}
+                        {/*/>*/}
+                        {/*<Route*/}
+                        {/*    path="/application"*/}
+                        {/*    element={*/}
+                        {/*        <ProtectedRoute>*/}
+                        {/*            <Applications/>*/}
+                        {/*        </ProtectedRoute>*/}
+                        {/*    }*/}
+                        {/*/>*/}
                         <Route path="*" element={<div>404 - Sahifa topilmadi</div>}/>
 
 
