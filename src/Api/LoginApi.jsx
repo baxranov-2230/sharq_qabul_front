@@ -5,10 +5,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 import axiosInstance from "./axiosinstance";
 
-export const saveTokens = (accessToken, refreshToken) => {
+export const saveTokens = (accessToken) => {
     localStorage.setItem(
         "token",
-        JSON.stringify({ access_token: accessToken, refresh_token: refreshToken })
+        JSON.stringify({ access_token: accessToken })
     );
 };
 //
@@ -37,8 +37,8 @@ export const LoginApi = async (loginDate) => {
     );
 
     if (response.data.access_token) {
-        const { access_token, refresh_token } = response.data;
-        saveTokens(access_token, refresh_token);
+        const { access_token } = response.data;
+        saveTokens(access_token);
         // localStorage.setItem("token", JSON.stringify(response.data));
     }
 

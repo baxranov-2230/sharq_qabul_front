@@ -17,6 +17,13 @@ const axiosInstance = axios.create({
     },
     withCredentials: true,
 });
+const axiosInstancePost = axios.create({
+    baseURL: API_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
+    withCredentials: true,
+});
 
 export const isTokenExpired = (token) => {
     if (!token) return true;

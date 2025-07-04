@@ -8,6 +8,7 @@ import {
     ChevronRight,
     ChevronDown,
 } from "lucide-react";
+import { MdLanguage } from "react-icons/md";
 import {FaList} from "react-icons/fa6";
 import {LuNotebookText} from "react-icons/lu";
 import {MdOutlinePostAdd} from "react-icons/md";
@@ -42,12 +43,12 @@ function Sidebar({isOpen}) {
                 id: "main",
                 items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
             },
-    //         {
-    //             id: "list",
-    //             items: [
-    //                 {icon: FaList, label: "Qabul bo'lgan ", path: "/list-application"},
-    //             ],
-    //         },
+            {
+                id: "language",
+                items: [
+                    {icon: MdLanguage, label: "Ta'lim tili", path: "/list-study-language"},
+                ],
+            },
     //         {
     //             id: "no_list",
     //             items: [

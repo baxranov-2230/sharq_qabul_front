@@ -28,6 +28,7 @@ import {useQuery} from "@tanstack/react-query";
 // import {UserMe} from "./Api/UserApi.jsx";
 // import ListApplication from "./pages/ListApplication.jsx";
 // import NoListApplication from "./pages/NoListApplication.jsx";
+import ListStudyLanguage from "./pages/AdminPages/ListStudyLanguage.jsx";
 
 
 function ProtectedRoute({children}) {
@@ -171,14 +172,14 @@ function App() {
 
                         />
 
-                        {/*<Route*/}
-                        {/*    path="/profile"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <Profile/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
+                        <Route
+                            path="/list-study-language"
+                            element={
+                                <ProtectedRoute>
+                                    <ListStudyLanguage/>
+                                </ProtectedRoute>
+                            }
+                        />
                         {/*<Route*/}
                         {/*    path="/list-application"*/}
                         {/*    element={*/}
