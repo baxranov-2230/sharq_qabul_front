@@ -110,13 +110,13 @@ function App() {
                                             className="h-8 w-8 rounded-full bg-[#E7E7FF] flex items-center justify-center">
                                             <span className="text-sm font-medium">JS</span>
                                         </div>
-                                        <div className="hidden md:block">
-                                            {userRole === "student" && (
-                                                <div className="text-sm font-medium">{student?.first_name}</div>
-                                            )}
-                                            {/*<div className="text-sm font-medium">{student?.first_name}</div>*/}
-                                            <div className="text-xs text-black">{userRole}</div>
-                                        </div>
+                                        {/*<div className="hidden md:block">*/}
+                                        {/*    {userRole === "student" && (*/}
+                                        {/*        <div className="text-sm font-medium">{student?.first_name}</div>*/}
+                                        {/*    )}*/}
+                                        {/*    /!*<div className="text-sm font-medium">{student?.first_name}</div>*!/*/}
+                                        {/*    <div className="text-xs text-black">{userRole}</div>*/}
+                                        {/*</div>*/}
                                     </div>
                                 </Button>
                                 <Menu
