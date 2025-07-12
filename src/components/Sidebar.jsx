@@ -2,7 +2,9 @@ import React, {useEffect, useState} from "react";
 import {NavLink, useLocation} from "react-router-dom";
 import {RiFolderAddLine} from "react-icons/ri";
 import {CiViewList} from "react-icons/ci";
-import logo from "../assets/images/logo_top.png";
+import { PiListChecksFill } from "react-icons/pi";
+import logo from "../assets/images/logo_sharq.jpg";
+import {IoIosPerson} from "react-icons/io";
 import {
     Home,
     ChevronRight,
@@ -44,9 +46,15 @@ function Sidebar({isOpen}) {
                 items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
             },
             {
-                id: "language",
+                id: "application",
                 items: [
-                    {icon: MdLanguage, label: "Ta'lim tili", path: "/list-study-language"},
+                    {icon: PiListChecksFill , label: "Arizalar", path: "/list-application"},
+                ],
+            },
+            {
+                id: "profile",
+                items: [
+                    {icon: IoIosPerson , label: "Profil", path: "/profile"},
                 ],
             },
     //         {

@@ -9,11 +9,10 @@ import {
 import {IMaskInput} from 'react-imask';
 import {useNavigate, Link} from "react-router-dom";
 import toast from "react-hot-toast";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-
+import {useMutation} from "@tanstack/react-query";
 import {replace, useFormik} from "formik";
 import * as Yup from "yup";
-import {LoginApi} from "../Api/LoginApi";
+import {LoginApi, RegisterApi} from "../Api/LoginApi";
 import {LogIn} from 'lucide-react'
 import {GrHide} from "react-icons/gr";
 import {BiShow} from "react-icons/bi";
@@ -21,52 +20,51 @@ import {FaArrowRightLong} from "react-icons/fa6";
 
 import Logo from "../assets/images/logo.png";
 import Sharq from "../assets/images/sharq.jpg";
-import {GetPassportApi} from "../Api/UserApi.jsx";
 
-export default function LoginPage() {
+export default function RegisterPage() {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
 
     const [showPassword, setShowPassword] = useState(false);
-
 
     const togglePassword = () => {
         setShowPassword((prev) => !prev);
     };
-    const loginMutation = useMutation({
+    const registerMutation = useMutation({
         mutationKey: ["login-user"],
-        mutationFn: LoginApi,
+        mutationFn: RegisterApi,
         onSuccess: (data) => {
             toast.success(data.message || "Successfully");
-            queryClient.clear();
         },
         onError: (error) => {
             toast.error(error.message);
         },
     });
-
-    const isSuccess = loginMutation.isSuccess;
+    const isSuccess = registerMutation.isSuccess;
 
     useEffect(() => {
         if (isSuccess) {
-            navigate("/profile");
+            navigate("/passport");
+            window.location.reload();
         }
     }, [navigate, isSuccess]);
     const formik = useFormik({
         initialValues: {
-            username: "",
+            phone_number: "",
             password: "",
+            verification_code: "",
         },
         validationSchema: Yup.object({
-            username: Yup.string().required("Telefon raqami majburiy"),
-            password: Yup.string().required("Parol majburiy"),
+            phone_number: Yup.string().required("Telefon raqami majburiy"),
+            password: Yup.string().required("password kiritish majburiy"),
+            verification_code: Yup.string().required("Tasdiqlash kodi kiritish majburiy"),
         }),
         onSubmit: (values) => {
-            const loginData = {
-                username: values.username,
+            const registerData = {
+                phone_number: values.phone_number,
                 password: values.password,
+                verification_code: values.verification_code,
             };
-            loginMutation.mutate(loginData);
+            registerMutation.mutate(registerData);
         },
     });
     return (
@@ -90,11 +88,12 @@ export default function LoginPage() {
                             </label>
                             <IMaskInput
                                 mask="+{998}-00-000-00-00"
-                                name="username"
-                                value={formik.values.username}
-                                onChange={(e) => { // inputdan faqat raqamlarni ajratib olish
+                                name="phone_number"
+                                value={formik.values.phone_number}
+                                onChange={(e) => {
+                                    // inputdan faqat raqamlarni ajratib olish
                                     const onlyDigits = e.target.value.replace(/\D/g, '');
-                                    formik.setFieldValue("username", onlyDigits);
+                                    formik.setFieldValue("phone_number", onlyDigits);
                                 }}
                                 onBlur={formik.handleBlur}
                                 className="border rounded px-3 py-2 w-full"
@@ -123,6 +122,27 @@ export default function LoginPage() {
                                 </button>
                             </div>
                         </div>
+                        <div className="mb-6">
+                            <label className="block text-gray-700 text-sm font-semibold mb-2">
+                                Tasdiqlash kodini kiriting
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type={"text"}
+                                    name="verification_code"
+                                    {...formik.getFieldProps("verification_code")}
+                                    className=" w-full  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={togglePassword}
+                                    className="absolute right-2 top-3 text-xl items-center  text-blue-500"
+                                >
+
+                                </button>
+                            </div>
+                        </div>
                         <button
                             type="submit"
                             className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 font-semibold"
@@ -131,8 +151,7 @@ export default function LoginPage() {
                         </button>
                     </form>
                     <div className="text-center mt-4">
-                        <Link to="/verify-sms"
-                              className="flex justify-center items-center font-semibold text-gray-500 hover:underline pl-3">
+                        <Link to="/register-sms" className="flex justify-center items-center font-semibold text-gray-500 hover:underline pl-3">
                             Ro'yxatdan o'tish <FaArrowRightLong className="ml-2 text-blue-500"/>
                         </Link>
                     </div>

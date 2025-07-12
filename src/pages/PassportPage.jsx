@@ -9,11 +9,10 @@ import {
 import {IMaskInput} from 'react-imask';
 import {useNavigate, Link} from "react-router-dom";
 import toast from "react-hot-toast";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-
+import {useMutation} from "@tanstack/react-query";
 import {replace, useFormik} from "formik";
 import * as Yup from "yup";
-import {LoginApi} from "../Api/LoginApi";
+import {LoginApi, PassportApi} from "../Api/LoginApi";
 import {LogIn} from 'lucide-react'
 import {GrHide} from "react-icons/gr";
 import {BiShow} from "react-icons/bi";
@@ -21,52 +20,48 @@ import {FaArrowRightLong} from "react-icons/fa6";
 
 import Logo from "../assets/images/logo.png";
 import Sharq from "../assets/images/sharq.jpg";
-import {GetPassportApi} from "../Api/UserApi.jsx";
 
-export default function LoginPage() {
+export default function PassportPage() {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
 
     const [showPassword, setShowPassword] = useState(false);
-
 
     const togglePassword = () => {
         setShowPassword((prev) => !prev);
     };
-    const loginMutation = useMutation({
-        mutationKey: ["login-user"],
-        mutationFn: LoginApi,
+    const passportMutation = useMutation({
+        mutationKey: ["passport-user"],
+        mutationFn: PassportApi,
         onSuccess: (data) => {
             toast.success(data.message || "Successfully");
-            queryClient.clear();
         },
         onError: (error) => {
             toast.error(error.message);
         },
     });
-
-    const isSuccess = loginMutation.isSuccess;
+    const isSuccess = passportMutation.isSuccess;
 
     useEffect(() => {
         if (isSuccess) {
-            navigate("/profile");
+            navigate("/admin");
+            window.location.reload();
         }
     }, [navigate, isSuccess]);
     const formik = useFormik({
         initialValues: {
-            username: "",
-            password: "",
+            passport_series_number: "",
+            jshshir: "",
         },
         validationSchema: Yup.object({
-            username: Yup.string().required("Telefon raqami majburiy"),
-            password: Yup.string().required("Parol majburiy"),
+            passport_series_number: Yup.string().required("Passport seriyani kiritish shart"),
+            jshshir: Yup.string().required("JSHIR kiritish shart"),
         }),
         onSubmit: (values) => {
-            const loginData = {
-                username: values.username,
-                password: values.password,
+            const passportData = {
+                passport_series_number: values.passport_series_number,
+                jshshir: values.jshshir,
             };
-            loginMutation.mutate(loginData);
+            passportMutation.mutate(passportData);
         },
     });
     return (
@@ -79,48 +74,42 @@ export default function LoginPage() {
                         <img src={Logo} className="w-44"/>
                     </div>
                     <h2 className="text-2xl font-bold text-center mb-6">
-                        Kabinitga kirish
+                        Passport ma'lumotlarni kiritish
                     </h2>
 
 
                     <form onSubmit={formik.handleSubmit}>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-semibold mb-2">
-                                Telefon raqam
-                            </label>
-                            <IMaskInput
-                                mask="+{998}-00-000-00-00"
-                                name="username"
-                                value={formik.values.username}
-                                onChange={(e) => { // inputdan faqat raqamlarni ajratib olish
-                                    const onlyDigits = e.target.value.replace(/\D/g, '');
-                                    formik.setFieldValue("username", onlyDigits);
-                                }}
-                                onBlur={formik.handleBlur}
-                                className="border rounded px-3 py-2 w-full"
-                                placeholder="+998 (__) ___-__-__"
-                                required
-                            />
-                        </div>
+
                         <div className="mb-6">
                             <label className="block text-gray-700 text-sm font-semibold mb-2">
-                                Parol
+                                Passport seriya va raqami
                             </label>
                             <div className="relative">
                                 <input
-                                    type={showPassword ? "text" : "password"}
-                                    name="password"
-                                    {...formik.getFieldProps("password")}
+                                    placeholder="AD1234567"
+                                    type={"text" }
+                                    name="passport_series_number"
+                                    {...formik.getFieldProps("passport_series_number")}
                                     className=" w-full  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                                     required
                                 />
-                                <button
-                                    type="button"
-                                    onClick={togglePassword}
-                                    className="absolute right-2 top-3 text-xl items-center  text-blue-500"
-                                >
-                                    {showPassword ? <GrHide/> : <BiShow/>}
-                                </button>
+
+                            </div>
+                        </div>
+                        <div className="mb-6">
+                            <label className="block text-gray-700 text-sm font-semibold mb-2">
+                                JSHIRni kiriting
+                            </label>
+                            <div className="relative">
+                                <input
+                                    placeholder="31025489778941"
+                                    type={"text" }
+                                    name="jshshir"
+                                    {...formik.getFieldProps("jshshir")}
+                                    className=" w-full  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                    required
+                                />
+
                             </div>
                         </div>
                         <button
@@ -131,9 +120,8 @@ export default function LoginPage() {
                         </button>
                     </form>
                     <div className="text-center mt-4">
-                        <Link to="/verify-sms"
-                              className="flex justify-center items-center font-semibold text-gray-500 hover:underline pl-3">
-                            Ro'yxatdan o'tish <FaArrowRightLong className="ml-2 text-blue-500"/>
+                        <Link to="/login" className="flex justify-center items-center font-semibold text-gray-500 hover:underline pl-3">
+                            Loginga o'tish o'tish <FaArrowRightLong className="ml-2 text-blue-500"/>
                         </Link>
                     </div>
                 </div>

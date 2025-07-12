@@ -20,7 +20,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 
 
-function ListStudyLanguage() {
+function ListApplication() {
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [open, setOpen] = useState(false);
 
@@ -84,12 +84,12 @@ function ListStudyLanguage() {
 
 
     return (<div className="space-y-6">
-        <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-800">Ta'lim tillari</h2>
-            <Button variant="contained" color="primary" onClick={handleOpen}>
-                Yangi qo'shish
-            </Button>
-        </div>
+        {/*<div className="flex items-center justify-between">*/}
+        {/*    <h2 className="text-2xl font-bold text-gray-800">Ta'lim tillari</h2>*/}
+        {/*    <Button variant="contained" color="primary" onClick={handleOpen}>*/}
+        {/*        Yangi qo'shish*/}
+        {/*    </Button>*/}
+        {/*</div>*/}
         <Dialog
             open={open}
             onClose={handleClose}
@@ -211,4 +211,4 @@ function ListStudyLanguage() {
     </div>);
 }
 
-export default ListStudyLanguage;
+export default ListApplication;

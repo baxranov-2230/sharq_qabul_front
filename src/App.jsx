@@ -11,31 +11,33 @@ import {jwtDecode} from "jwt-decode";
 import {Toaster} from "react-hot-toast";
 
 
-
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
-
+import {IoIosPerson} from "react-icons/io";
+import {LuLogOut} from "react-icons/lu";
 import HemisLogo from "./components/HemisLogo";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 // import Profile from "./pages/Profile.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import {useQuery} from "@tanstack/react-query";
-// import Applications from "./pages/Applications.jsx";
-// import RatingBook from "./pages/RatingBook.jsx";
-// import {UserMe} from "./Api/UserApi.jsx";
-// import ListApplication from "./pages/ListApplication.jsx";
-// import NoListApplication from "./pages/NoListApplication.jsx";
-import ListStudyLanguage from "./pages/AdminPages/ListStudyLanguage.jsx";
+
+import ListApplication from "./pages/ApplicationPages/ListApplication.jsx";
+import RegisterSendSmsPage from "./pages/RegisterSendSmsPage.jsx";
+import VerifySMS from "./pages/VerifySMS.jsx";
+import PassportPage from "./pages/PassportPage.jsx";
+import Profile from "./pages/Profile.jsx";
+import CreateApplication from "./pages/ApplicationPages/CreateApplication.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
 
 
 function ProtectedRoute({children}) {
     const token = JSON.parse(localStorage.getItem("token"));
     const location = useLocation();
     if (!token) {
-            return <Navigate to="/login" state={{from: location}} replace/>;
+        return <Navigate to="/login" state={{from: location}} replace/>;
     }
     return children;
 }
@@ -45,6 +47,9 @@ function App() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const location = useLocation(); // Get current route location
     const isLoginPage = location.pathname === "/login" || location.pathname === "/";
+    const isRegisterPage = location.pathname === "/register";
+    const isVerifySMSPage = location.pathname === "/verify-sms";
+    const isPassportPage = location.pathname === "/passport";
     const [userRole, setUserRole] = useState("");
 
     useEffect(() => {
@@ -57,10 +62,6 @@ function App() {
         }
     }, [localStorage.getItem("token")]);
 
-    // const {isError, isSuccess, isLoading, data: student, error, refetch} = useQuery({
-    //     queryKey: ['userMe'],
-    //     queryFn: UserMe,
-    // })
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -76,12 +77,14 @@ function App() {
     };
     return (
         <div className="min-h-screen bg-[#F5F5F9] ">
-            <div className={` ${!isLoginPage ? "pt-8" : ""}`}>
-                {!isLoginPage && <Sidebar isOpen={isSidebarOpen}/>}
+            <div
+                className={` ${(!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage) ? "pt-8" : ""}`}>
+                {(!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage) &&
+                    <Sidebar isOpen={isSidebarOpen}/>}
                 <header className={`bg-white px-6 mx-6 transition-all duration-300  text-black sticky top-0   z-10 ${
-                    !isLoginPage && isSidebarOpen
+                    (!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage) && isSidebarOpen
                         ? "sm:ml-72"
-                        : !isLoginPage
+                        : (!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage)
                             ? "sm:ml-28"
                             : "hidden"
                 }`}
@@ -95,7 +98,15 @@ function App() {
                             />
                             <HemisLogo className="h-8"/>
                         </div>
-                        <div className="flex items-center space-x-6">
+                        <div className="flex items-center space-x-6 mr-10">
+                            <div>
+                                <button
+                                    className="btn-primary flex items-center space-x-2 bg-[#154576] hover:bg-[#0361B9] text-white px-4 py-2 rounded ">
+                                    <Link to="/create-application">
+                                        Ariza yuborish
+                                    </Link>
+                                </button>
+                            </div>
                             <Bell className="h-5 w-5 cursor-pointer"/>
                             <div>
                                 <Button
@@ -110,13 +121,6 @@ function App() {
                                             className="h-8 w-8 rounded-full bg-[#E7E7FF] flex items-center justify-center">
                                             <span className="text-sm font-medium">JS</span>
                                         </div>
-                                        {/*<div className="hidden md:block">*/}
-                                        {/*    {userRole === "student" && (*/}
-                                        {/*        <div className="text-sm font-medium">{student?.first_name}</div>*/}
-                                        {/*    )}*/}
-                                        {/*    /!*<div className="text-sm font-medium">{student?.first_name}</div>*!/*/}
-                                        {/*    <div className="text-xs text-black">{userRole}</div>*/}
-                                        {/*</div>*/}
                                     </div>
                                 </Button>
                                 <Menu
@@ -130,16 +134,19 @@ function App() {
                                     TransitionComponent={Fade}
                                 >
                                     <MenuItem onClick={handleClose}>
-                                        <Link to="/profile">Profile</Link>
+                                        <IoIosPerson
+                                            className="mr-2 text-2xl text-white bg-amber-300 rounded-full p-1"/> <Link
+                                        to="/profile">Profile</Link>
                                     </MenuItem>
-                                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                                    {/*<MenuItem onClick={handleClose}>My account</MenuItem>*/}
                                     <MenuItem
                                         onClick={() => {
                                             handleLogout();
                                             handleClose();
                                         }}
                                     >
-                                        Logout
+                                        <LuLogOut
+                                            className="mr-2 font-bold text-white text-2xl bg-red-500 rounded-full p-1"/> Logout
                                     </MenuItem>
                                 </Menu>
                             </div>
@@ -149,9 +156,9 @@ function App() {
                 </header>
                 <main
                     className={` p-6  transition-all duration-300 ${
-                        !isLoginPage && isSidebarOpen
+                        (!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage) && isSidebarOpen
                             ? "sm:ml-64"
-                            : !isLoginPage
+                            : (!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage)
                                 ? "sm:ml-20"
                                 : ""
                     }`}
@@ -160,7 +167,16 @@ function App() {
                     <Routes>
                         <Route path="/" element={<LoginPage/>}/>
                         <Route path="/login" element={<LoginPage/>}/>
+                        {/*<Route path="/register-sms" element={<RegisterSendSmsPage/>}/>*/}
+                        <Route path="/verify-sms" element={<RegisterSendSmsPage/>}/>
+                        <Route path="/register" element={<RegisterPage/>}/>
 
+                        <Route path="/passport" element={
+                            <ProtectedRoute>
+                                <PassportPage/>
+                            </ProtectedRoute>
+
+                        }/>
                         <Route
                             path="/admin"
 
@@ -171,12 +187,30 @@ function App() {
                             }
 
                         />
-
                         <Route
-                            path="/list-study-language"
+                            path="/profile"
+
                             element={
                                 <ProtectedRoute>
-                                    <ListStudyLanguage/>
+                                    <Profile/>
+                                </ProtectedRoute>
+                            }
+
+                        />
+
+                        <Route
+                            path="/list-application"
+                            element={
+                                <ProtectedRoute>
+                                    <ListApplication/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/create-application"
+                            element={
+                                <ProtectedRoute>
+                                    <CreateApplication/>
                                 </ProtectedRoute>
                             }
                         />
