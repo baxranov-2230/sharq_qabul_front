@@ -79,7 +79,7 @@ export default function LoginPage() {
                         <img src={Logo} className="w-44"/>
                     </div>
                     <h2 className="text-2xl font-bold text-center mb-6">
-                        Kabinitga kirish
+                        Kabenitga kirish
                     </h2>
 
 

@@ -3,7 +3,7 @@ import {NavLink, useLocation} from "react-router-dom";
 import {RiFolderAddLine} from "react-icons/ri";
 import {CiViewList} from "react-icons/ci";
 import { PiListChecksFill } from "react-icons/pi";
-import logo from "../assets/images/logo_sharq.jpg";
+import logo from "../assets/images/logo_sharq.png";
 import {IoIosPerson} from "react-icons/io";
 import {
     Home,
@@ -41,10 +41,10 @@ function Sidebar({isOpen}) {
     let menuCategories;
     // if (userRole === "admin") {
         menuCategories = [
-            {
-                id: "main",
-                items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
-            },
+            // {
+            //     id: "main",
+            //     items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
+            // },
             {
                 id: "application",
                 items: [

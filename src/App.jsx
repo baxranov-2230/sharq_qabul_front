@@ -31,6 +31,7 @@ import PassportPage from "./pages/PassportPage.jsx";
 import Profile from "./pages/Profile.jsx";
 import CreateApplication from "./pages/ApplicationPages/CreateApplication.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
+import {GetApplicationApi} from "./Api/UserApi.jsx";
 
 
 function ProtectedRoute({children}) {
@@ -51,6 +52,12 @@ function App() {
     const isVerifySMSPage = location.pathname === "/verify-sms";
     const isPassportPage = location.pathname === "/passport";
     const [userRole, setUserRole] = useState("");
+
+    const { data: application, isLoading, error } = useQuery({
+        queryKey: ["chek-application"],
+        queryFn: GetApplicationApi,
+    });
+    const isDisabled = !!application || isLoading;
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -101,11 +108,25 @@ function App() {
                         <div className="flex items-center space-x-6 mr-10">
                             <div>
                                 <button
-                                    className="btn-primary flex items-center space-x-2 bg-[#154576] hover:bg-[#0361B9] text-white px-4 py-2 rounded ">
-                                    <Link to="/create-application">
-                                        Ariza yuborish
-                                    </Link>
+                                    disabled={isDisabled}
+                                    className={` flex items-center space-x-2 px-4 py-2 rounded text-white ${
+                                        isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#154576] hover:bg-[#0361B9]'
+                                    }`}
+                                >
+                                    {!isDisabled ? (
+                                        <Link to="/create-application">Ariza yuborish</Link>
+                                    ) : (
+                                        <span>Ariza yuborilgan</span>
+                                    )}
                                 </button>
+
+
+                                {/*<button*/}
+                                {/*    className="btn-primary flex items-center space-x-2 bg-[#154576] hover:bg-[#0361B9] text-white px-4 py-2 rounded ">*/}
+                                {/*    <Link to="/create-application" >*/}
+                                {/*        Ariza yuborish*/}
+                                {/*    </Link>*/}
+                                {/*</button>*/}
                             </div>
                             <Bell className="h-5 w-5 cursor-pointer"/>
                             <div>
@@ -177,16 +198,16 @@ function App() {
                             </ProtectedRoute>
 
                         }/>
-                        <Route
-                            path="/admin"
+                        {/*<Route*/}
+                        {/*    path="/admin"*/}
 
-                            element={
-                                <ProtectedRoute>
-                                    <Dashboard/>
-                                </ProtectedRoute>
-                            }
+                        {/*    // element={*/}
+                        {/*    //     <ProtectedRoute>*/}
+                        {/*    //         <Dashboard/>*/}
+                        {/*    //     </ProtectedRoute>*/}
+                        {/*    // }*/}
 
-                        />
+                        {/*/>*/}
                         <Route
                             path="/profile"
 

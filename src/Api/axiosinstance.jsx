@@ -22,7 +22,7 @@ const axiosInstancePost = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
-    withCredentials: true,
+    // withCredentials: true,
 });
 
 export const isTokenExpired = (token) => {

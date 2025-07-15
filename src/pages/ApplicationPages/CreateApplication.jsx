@@ -1,218 +1,255 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import {useNavigate} from "react-router-dom";
-import {useMutation} from "@tanstack/react-query";
-import {FormControl, FormControlLabel,  FormLabel, InputLabel, Radio,  RadioGroup, Select} from "@mui/material";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {FormControl, FormControlLabel, FormLabel, InputLabel, Radio, RadioGroup, Select} from "@mui/material";
+import {
+    CreateApplicationApi,
+    GetEducationTypeApi,
+    GetPassportApi,
+    GetStudyDirectionApi,
+    GetStudyFormApi,
+    GetStudyLanguageApi,
+    GetStudyTypeApi
+} from "../../Api/UserApi.jsx";
+import MenuItem from "@mui/material/MenuItem";
+import {RegisterApi} from "../../Api/LoginApi.jsx";
 
-// import {CreateCategoryApi} from "../../Api/CategoryApi.jsx";
 
 function CreateStudyLanguage() {
     const navigate = useNavigate();
-    // const categoryMutation = useMutation({
-    //     mutationKey: ["create-category"], mutationFn: CreateCategoryApi, onSuccess: (data) => {
-    //         toast.success(data.message || "Categoriya muvaffaqiyatli yaratildi");
-    //     }, onError: (error) => {
-    //         toast.error(error.message || "Xatolik yuz berdi");
-    //     },
-    // });
-    // const formik = useFormik({
-    //     initialValues: {
-    //         name_uz: "", name_ru: "", name_en: "",
-    //     }, validationSchema: Yup.object({
-    //         name_uz: Yup.string().required("!!! To'ldirish shart"),
-    //         name_ru: Yup.string().required("!!! To'ldirish shart"),
-    //         name_en: Yup.string().required("!!! To'ldirish shart"),
-    //     }), onSubmit: (values) => {
-    //         // setFormData(values);
-    //         const categoryDate = {
-    //             name_uz: values.name_uz,
-    //             name_ru: values.name_ru,
-    //             name_en: values.name_en,
-    //         };
-    //         categoryMutation.mutate(categoryDate);
-    //     },
-    // });
-    // const isSuccess = categoryMutation.isSuccess;
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         navigate("/list-category");
-    //     }
-    // }, [navigate, isSuccess]);
+
+
+
+    const {isLoading: loadingStudyTypes, data: studyTypes} = useQuery({
+        queryKey: ['study-type'],
+        queryFn: GetStudyTypeApi,
+    })
+
+    const {isLoading: loadingStudyForms, data: studyForms} = useQuery({
+        queryKey: ['study-form'],
+        queryFn: GetStudyFormApi,
+    })
+
+    const {data: studyLanguages} = useQuery({
+        queryKey: ['study-language'],
+        queryFn: GetStudyLanguageApi,
+    })
+
+    const {isLoading: loadingEducationTypes, data: educationTypes} = useQuery({
+        queryKey: ['education-type'],
+        queryFn: GetEducationTypeApi,
+    })
+
+    const {isLoading: loadingStudyDirections, data: studyDirections} = useQuery({
+        queryKey: ['study-direction'],
+        queryFn: GetStudyDirectionApi,
+    })
+
+    const [filteredStudyForms, setFilteredStudyForms] = useState(studyForms);
+
+
+    const applicationMutation = useMutation({
+        mutationKey: ["create-application"], mutationFn: CreateApplicationApi,
+        onSuccess: (data) => {
+            toast.success(data.message || "Ariza muvaffaqiyatli yaratildi");
+        }, onError: (error) => {
+            toast.error(error.message || "Xatolik yuz berdi");
+        },
+    });
+    const formik = useFormik({
+        initialValues: {
+            study_language_id: "",
+            study_form_id: "",
+            study_direction_id: "",
+            study_type_id: "",
+            education_type_id: "",
+            graduate_year: "",
+            certificate_path: "",
+            dtm_sheet: "",
+        },
+        validationSchema: Yup.object({
+            // study_language_id: Yup.string().required("!!! To'ldirish shart"),
+            study_form_id: Yup.string().required("!!! To'ldirish shart"),
+            study_direction_id: Yup.string().required("!!! To'ldirish shart"),
+            study_type_id: Yup.string().required("!!! To'ldirish shart"),
+            education_type_id: Yup.string().required("!!! To'ldirish shart"),
+            graduate_year: Yup.string().required("!!! To'ldirish shart"),
+        }), onSubmit: (values) => {
+            // setFormData(values);
+            const studentData = {
+                study_language_id: 4,
+                certificate_path: "string",
+                dtm_sheet: "string",
+                study_form_id: values.study_form_id,
+                study_direction_id: values.study_direction_id,
+                study_type_id: values.study_type_id,
+                education_type_id: values.education_type_id,
+                graduate_year: values.graduate_year,
+            };
+            applicationMutation.mutate(studentData);
+        },
+    });
+    const isSuccess = applicationMutation.isSuccess;
+
+    useEffect(() => {
+        if (isSuccess) {
+            navigate("/list-application");
+            window.location.reload();
+        }
+    }, [navigate, isSuccess]);
+
+    useEffect(() => {
+        if (formik.values.study_type_id === 3) { // Bakalavr ID si 1 deb faraz qilindi
+            setFilteredStudyForms(studyForms.filter((form) => form.name !== 'Sirtqi'));
+        } else {
+            setFilteredStudyForms(studyForms); // Boshqa hollarda barcha shakllar ko'rinadi
+        }
+    }, [formik.values.study_type_id]);
 
 
     return (<div className="space-y-6">
-        <h2 className="text-2xl font-bold text-gray-800">Kategoriya qo'shish</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Ariza yuborish</h2>
 
 
         <div className="bg-white rounded-lg shadow">
             <div className="p-4 border-b bg-gray-50  ">
-                <form>
-
+                <form
+                    onSubmit={formik.handleSubmit}
+                >
                     <div className="grid md:grid-cols-2 gap-3">
-                        {/*<div className="w-full">*/}
-                        {/*    <label htmlFor="name_uz"*/}
-                        {/*           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">*/}
-                        {/*        Uzbekcha*/}
-                        {/*    </label>*/}
-
-
-                        {/*    <input type="text"*/}
-                        {/*           id="name_uz"*/}
-                        {/*           name="name_uz"*/}
-
-                        {/*           className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>*/}
-
-                        {/*</div>*/}
                         <div className="w-full">
-                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">O'qish turini tanlang</p>
+                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">O'qish turini
+                                tanlang</p>
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">O'qish turini tanlang</InputLabel>
+                                <InputLabel id="demo-simple-select-label">O'qish turini tanlang </InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    // value={formik.values.facultyId}
-                                    label="Fakultet"
-                                    name="facultyId"
-                                    // onChange={formik.handleChange}
+                                    value={formik.values.study_type_id}
+                                    label="study_type_id"
+                                    name="study_type_id"
+                                    onChange={formik.handleChange}
                                 >
-                                    {/*{isLoading ? (*/}
-                                    {/*    <MenuItem disabled>Loading...</MenuItem>*/}
-                                    {/*) : (*/}
-                                    {/*    data?.map((faculty) => (*/}
-                                    {/*        <MenuItem key={faculty?.faculty_id} value={faculty?.faculty_id}>*/}
-                                    {/*            {faculty?.faculty_name_uz}*/}
-                                    {/*        </MenuItem>*/}
-                                    {/*    ))*/}
-                                    {/*)}*/}
+                                    {loadingStudyTypes ? (
+                                        <MenuItem disabled>Loading...</MenuItem>
+                                    ) : (
+                                        studyTypes?.map((studyType) => (
+                                            <MenuItem key={studyType?.id} value={studyType?.id}>
+                                                {studyType?.name}
+                                            </MenuItem>
+                                        ))
+                                    )}
                                 </Select>
                             </FormControl>
                         </div>
                         <div className="w-full">
-                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Tugatgan ta'lim muassasa turini tanlang</p>
+                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Tugatgan ta'lim
+                                muassasa turini tanlang</p>
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Tugatgan ta'lim muassasa turini tanlang</InputLabel>
+                                <InputLabel id="demo-simple-select-label">Tugatgan ta'lim muassasa turini
+                                    tanlang</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    // value={formik.values.facultyId}
-                                    label="Fakultet"
-                                    name="facultyId"
-                                    // onChange={formik.handleChange}
+                                    value={formik.values.education_type_id}
+                                    label="education_type_id"
+                                    name="education_type_id"
+                                    onChange={formik.handleChange}
                                 >
-                                    {/*{isLoading ? (*/}
-                                    {/*    <MenuItem disabled>Loading...</MenuItem>*/}
-                                    {/*) : (*/}
-                                    {/*    data?.map((faculty) => (*/}
-                                    {/*        <MenuItem key={faculty?.faculty_id} value={faculty?.faculty_id}>*/}
-                                    {/*            {faculty?.faculty_name_uz}*/}
-                                    {/*        </MenuItem>*/}
-                                    {/*    ))*/}
-                                    {/*)}*/}
+                                    {loadingEducationTypes ? (
+                                        <MenuItem disabled>Loading...</MenuItem>
+                                    ) : (
+                                        educationTypes?.map((educationType) => (
+                                            <MenuItem key={educationType?.name} value={educationType?.id}>
+                                                {educationType?.name}
+                                            </MenuItem>
+                                        ))
+                                    )}
                                 </Select>
                             </FormControl>
                         </div>
                         <div className="w-full">
-                            <label htmlFor="name_uz"
+                            <label htmlFor="graduate_year"
                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Bitirgan yilingizni kiriting
                             </label>
 
 
-                            <input type="number"
-                                   id="name_uz"
-                                   name="name_uz"
+                            <input type="text"
+                                   id="graduate_year"
+                                   name="graduate_year"
                                    placeholder="2020"
+                                   value={formik.values.graduate_year}
+                                   onChange={formik.handleChange}
                                    className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-                    </div>
-
+                        </div>
                         <div className="w-full">
-                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Ta'lim shaklini tanlang</p>
+                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Ta'lim shaklini
+                                tanlang</p>
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Ta'lim shaklini tanlang</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    // value={formik.values.facultyId}
-                                    label="Fakultet"
-                                    name="facultyId"
-                                    // onChange={formik.handleChange}
+                                    value={formik.values.study_form_id}
+                                    label="study_form_id"
+                                    name="study_form_id"
+                                    onChange={formik.handleChange}
                                 >
-                                    {/*{isLoading ? (*/}
-                                    {/*    <MenuItem disabled>Loading...</MenuItem>*/}
-                                    {/*) : (*/}
-                                    {/*    data?.map((faculty) => (*/}
-                                    {/*        <MenuItem key={faculty?.faculty_id} value={faculty?.faculty_id}>*/}
-                                    {/*            {faculty?.faculty_name_uz}*/}
-                                    {/*        </MenuItem>*/}
-                                    {/*    ))*/}
-                                    {/*)}*/}
+                                    {loadingStudyForms ? (
+                                        <MenuItem disabled>Loading...</MenuItem>
+                                    ) : (
+                                        filteredStudyForms?.map((studyForm) => (
+                                            <MenuItem key={studyForm?.name} value={studyForm?.id}>
+                                                {studyForm?.name}
+                                            </MenuItem>
+                                        ))
+                                    )}
                                 </Select>
                             </FormControl>
                         </div>
                         <div className="w-full">
-                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Ta'lim tilini tanlang</p>
+                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Ta'lim yunalishini
+                                tanlang</p>
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Ta'lim tilini tanlang</InputLabel>
+                                <InputLabel id="demo-simple-select-label">Ta'lim yunalishini tanlang</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    // value={formik.values.facultyId}
-                                    label="Fakultet"
-                                    name="facultyId"
-                                    // onChange={formik.handleChange}
+                                    value={formik.values.study_direction_id}
+                                    label="study_direction_id"
+                                    name="study_direction_id"
+                                    onChange={formik.handleChange}
                                 >
-                                    {/*{isLoading ? (*/}
-                                    {/*    <MenuItem disabled>Loading...</MenuItem>*/}
-                                    {/*) : (*/}
-                                    {/*    data?.map((faculty) => (*/}
-                                    {/*        <MenuItem key={faculty?.faculty_id} value={faculty?.faculty_id}>*/}
-                                    {/*            {faculty?.faculty_name_uz}*/}
-                                    {/*        </MenuItem>*/}
-                                    {/*    ))*/}
-                                    {/*)}*/}
+                                    {loadingStudyDirections ? (
+                                        <MenuItem disabled>Loading...</MenuItem>
+                                    ) : (
+                                        studyDirections?.map((studyDirection) => (
+                                            <MenuItem key={studyDirection?.id} value={studyDirection?.id}>
+                                                {studyDirection?.name}
+                                            </MenuItem>
+                                        ))
+                                    )}
                                 </Select>
                             </FormControl>
                         </div>
-                        <div className="w-full">
-                            <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Ta'lim yo'nalishini tanlang</p>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Ta'lim yo'nalishini tanlang</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    // value={formik.values.facultyId}
-                                    label="Fakultet"
-                                    name="facultyId"
-                                    // onChange={formik.handleChange}
-                                >
-                                    {/*{isLoading ? (*/}
-                                    {/*    <MenuItem disabled>Loading...</MenuItem>*/}
-                                    {/*) : (*/}
-                                    {/*    data?.map((faculty) => (*/}
-                                    {/*        <MenuItem key={faculty?.faculty_id} value={faculty?.faculty_id}>*/}
-                                    {/*            {faculty?.faculty_name_uz}*/}
-                                    {/*        </MenuItem>*/}
-                                    {/*    ))*/}
-                                    {/*)}*/}
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div className="w-full">
-                            <FormControl>
-                                <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Sertifikatingiz bormi?</p>
-                                <RadioGroup
-                                    row
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                    name="row-radio-buttons-group"
-                                >
-                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                                    <FormControlLabel value="no" control={<Radio />} label="No" />
+                        {/*<div className="w-full">*/}
+                        {/*    <FormControl>*/}
+                        {/*        <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Sertifikatingiz bormi?</p>*/}
+                        {/*        <RadioGroup*/}
+                        {/*            row*/}
+                        {/*            aria-labelledby="demo-row-radio-buttons-group-label"*/}
+                        {/*            name="row-radio-buttons-group"*/}
+                        {/*        >*/}
+                        {/*            <FormControlLabel value="yes" control={<Radio />} label="Yes" />*/}
+                        {/*            <FormControlLabel value="no" control={<Radio />} label="No" />*/}
 
-                                </RadioGroup>
-                            </FormControl>
-                        </div>
+                        {/*        </RadioGroup>*/}
+                        {/*    </FormControl>*/}
+                        {/*</div>*/}
 
 
                     </div>

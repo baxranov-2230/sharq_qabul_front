@@ -39,6 +39,7 @@ export default function RegisterPage() {
             toast.error(error.message);
         },
     });
+
     const isSuccess = registerMutation.isSuccess;
 
     useEffect(() => {
@@ -77,7 +78,7 @@ export default function RegisterPage() {
                         <img src={Logo} className="w-44"/>
                     </div>
                     <h2 className="text-2xl font-bold text-center mb-6">
-                        Kabinitga kirish
+                        Ro'yxatdan o'tish
                     </h2>
 
 
@@ -151,8 +152,8 @@ export default function RegisterPage() {
                         </button>
                     </form>
                     <div className="text-center mt-4">
-                        <Link to="/register-sms" className="flex justify-center items-center font-semibold text-gray-500 hover:underline pl-3">
-                            Ro'yxatdan o'tish <FaArrowRightLong className="ml-2 text-blue-500"/>
+                        <Link to="/login" className="flex justify-center items-center font-semibold text-gray-500 hover:underline pl-3">
+                            Loginga o'tish <FaArrowRightLong className="ml-2 text-blue-500"/>
                         </Link>
                     </div>
                 </div>

@@ -14,7 +14,6 @@ function Profile() {
     const {isError, isSuccess, isLoading, data: user, error, isFetched, refetch} = useQuery({
         queryKey: ['userMe'],
         queryFn: GetPassportApi,
-        retry: false,
     })
 
 

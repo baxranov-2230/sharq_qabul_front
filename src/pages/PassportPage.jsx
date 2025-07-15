@@ -43,7 +43,7 @@ export default function PassportPage() {
 
     useEffect(() => {
         if (isSuccess) {
-            navigate("/admin");
+            navigate("/profile");
             window.location.reload();
         }
     }, [navigate, isSuccess]);
