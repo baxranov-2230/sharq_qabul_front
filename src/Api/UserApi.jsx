@@ -118,3 +118,46 @@ export const GetApplicationApi = async () => {
         throw error;
     }
 };
+
+export const downloadApplicationTwoPdf = async () => {
+    try {
+        const response = await axiosInstance.get(
+            `${API_URL}/api/contract/download/two_side`,
+            {
+                responseType: "blob", // blob kerak, chunki bu fayl
+            }
+        );
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `application_two.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error("Faylni yuklab olishda xatolik:", error);
+        alert("Faylni yuklab bo‘lmadi.");
+    }
+};
+
+export const downloadApplicationThreePdf = async () => {
+    try {
+        const response = await axiosInstance.get(
+            `${API_URL}/api/contract/download/three_side`,
+            {
+                responseType: "blob", // blob kerak, chunki bu fayl
+            }
+        );
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `application_three.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error("Faylni yuklab olishda xatolik:", error);
+        alert("Faylni yuklab bo‘lmadi.");
+    }
+};
+

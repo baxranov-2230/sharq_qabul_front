@@ -117,23 +117,60 @@ export const LoginApi = async (loginData) => {
 
     return response.data;
 };
-// export const logout = async () => {
-//     const token = JSON.parse(localStorage.getItem("token"));
-//
-//     try {
-//         const response = axiosInstance.put(
-//             `${API_URL}/user/logout`,
-//             {}, // Agar kerak bo'lsa, payloadni bo'sh obyekt sifatida yuboring
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${token.access_token}`, // Authorization headerni yuborish
-//                 },
-//             }
-//         );
-//
-//         localStorage.removeItem("token");
-//         return response.data;
-//     } catch (error) {
-//         throw error.response ? error.response.data : new Error("Xatolik yuz berdi");
-//     }
-// };
+
+export const ForgotPasswordApi = async (forgotData) => {
+
+    try {
+        const response = await axios.post(
+            `${API_URL}/api/sms/send_forgot_password_code`,
+            {
+                phone_number: forgotData.phone_number,
+                // password: registerData.password,
+                // verification_code: registerData.verification_code,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json", // 🔐 juda muhim!
+                },
+            }
+        );
+
+        return await response.data;
+    } catch (error) {
+        console.log(error.response.data)
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        }
+        throw new Error(error.response.data.detail);
+    }
+};
+
+export const ResetPasswordApi = async (resetData) => {
+
+    try {
+        const response = await axios.post(
+            `${API_URL}/api/sms/reset_password`,
+            {
+                verification_code: resetData.verification_code,
+                new_password: resetData.new_password,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json", // 🔐 juda muhim!
+                },
+            }
+        );
+        if (response.data.access_token) {
+            const {access_token} = response.data;
+            saveTokens(access_token);
+            // localStorage.setItem("token", JSON.stringify(response.data));
+        }
+        return await response.data;
+    } catch (error) {
+        console.log(error.response.data)
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        }
+        throw new Error(error.response.data.detail);
+    }
+};

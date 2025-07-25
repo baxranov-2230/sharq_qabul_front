@@ -26,12 +26,13 @@ import {useQuery} from "@tanstack/react-query";
 
 import ListApplication from "./pages/ApplicationPages/ListApplication.jsx";
 import RegisterSendSmsPage from "./pages/RegisterSendSmsPage.jsx";
-import VerifySMS from "./pages/VerifySMS.jsx";
+import ForgetPasswordPage from "./pages/ForgetPasswordPage.jsx";
 import PassportPage from "./pages/PassportPage.jsx";
 import Profile from "./pages/Profile.jsx";
 import CreateApplication from "./pages/ApplicationPages/CreateApplication.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import {GetApplicationApi} from "./Api/UserApi.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 
 
 function ProtectedRoute({children}) {
@@ -51,9 +52,13 @@ function App() {
     const isRegisterPage = location.pathname === "/register";
     const isVerifySMSPage = location.pathname === "/verify-sms";
     const isPassportPage = location.pathname === "/passport";
+    const isForgetPassword = location.pathname === "/forget-password";
+    const isResetPassword = location.pathname === "/reset-password";
     const [userRole, setUserRole] = useState("");
 
-    const { data: application, isLoading, error } = useQuery({
+    const isPublicPage = !(isLoginPage || isRegisterPage || isVerifySMSPage || isPassportPage || isForgetPassword || isResetPassword);
+
+    const {data: application, isLoading, error} = useQuery({
         queryKey: ["chek-application"],
         queryFn: GetApplicationApi,
     });
@@ -85,13 +90,13 @@ function App() {
     return (
         <div className="min-h-screen bg-[#F5F5F9] ">
             <div
-                className={` ${(!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage) ? "pt-8" : ""}`}>
-                {(!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage) &&
+                className={` ${isPublicPage ? "pt-8" : ""}`}>
+                {isPublicPage &&
                     <Sidebar isOpen={isSidebarOpen}/>}
                 <header className={`bg-white px-6 mx-6 transition-all duration-300  text-black sticky top-0   z-10 ${
-                    (!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage) && isSidebarOpen
+                    isPublicPage && isSidebarOpen
                         ? "sm:ml-72"
-                        : (!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage)
+                        : isPublicPage
                             ? "sm:ml-28"
                             : "hidden"
                 }`}
@@ -119,14 +124,6 @@ function App() {
                                         <span>Ariza yuborilgan</span>
                                     )}
                                 </button>
-
-
-                                {/*<button*/}
-                                {/*    className="btn-primary flex items-center space-x-2 bg-[#154576] hover:bg-[#0361B9] text-white px-4 py-2 rounded ">*/}
-                                {/*    <Link to="/create-application" >*/}
-                                {/*        Ariza yuborish*/}
-                                {/*    </Link>*/}
-                                {/*</button>*/}
                             </div>
                             <Bell className="h-5 w-5 cursor-pointer"/>
                             <div>
@@ -177,9 +174,9 @@ function App() {
                 </header>
                 <main
                     className={` p-6  transition-all duration-300 ${
-                        (!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage) && isSidebarOpen
+                        isPublicPage && isSidebarOpen
                             ? "sm:ml-64"
-                            : (!isLoginPage && !isRegisterPage && !isVerifySMSPage && !isPassportPage)
+                            : isPublicPage
                                 ? "sm:ml-20"
                                 : ""
                     }`}
@@ -188,9 +185,10 @@ function App() {
                     <Routes>
                         <Route path="/" element={<LoginPage/>}/>
                         <Route path="/login" element={<LoginPage/>}/>
-                        {/*<Route path="/register-sms" element={<RegisterSendSmsPage/>}/>*/}
                         <Route path="/verify-sms" element={<RegisterSendSmsPage/>}/>
                         <Route path="/register" element={<RegisterPage/>}/>
+                        <Route path="/forget-password" element={<ForgetPasswordPage/>}/>
+                        <Route path="/reset-password" element={<ResetPasswordPage/>}/>
 
                         <Route path="/passport" element={
                             <ProtectedRoute>
@@ -198,16 +196,6 @@ function App() {
                             </ProtectedRoute>
 
                         }/>
-                        {/*<Route*/}
-                        {/*    path="/admin"*/}
-
-                        {/*    // element={*/}
-                        {/*    //     <ProtectedRoute>*/}
-                        {/*    //         <Dashboard/>*/}
-                        {/*    //     </ProtectedRoute>*/}
-                        {/*    // }*/}
-
-                        {/*/>*/}
                         <Route
                             path="/profile"
 
@@ -216,9 +204,7 @@ function App() {
                                     <Profile/>
                                 </ProtectedRoute>
                             }
-
                         />
-
                         <Route
                             path="/list-application"
                             element={
@@ -235,38 +221,7 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                        {/*<Route*/}
-                        {/*    path="/list-application"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <ListApplication/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*    path="/no-list-application"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <NoListApplication/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*    path="/rating"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <RatingBook/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*    path="/application"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <Applications/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
+
                         <Route path="*" element={<div>404 - Sahifa topilmadi</div>}/>
 
 

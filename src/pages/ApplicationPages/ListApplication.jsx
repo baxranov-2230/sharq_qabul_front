@@ -2,7 +2,7 @@ import React, {useState, forwardRef, useEffect} from "react";
 import {useQuery, useMutation} from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {Link} from "react-router-dom";
-import {FaRegEdit} from "react-icons/fa";
+
 import {MdDelete} from "react-icons/md";
 import {useFormik} from "formik";
 import * as Yup from "yup";
@@ -12,7 +12,8 @@ import {
     Slide
 } from '@mui/material';
 import {MdCancel} from "react-icons/md";
-import {GetApplicationApi} from "../../Api/UserApi.jsx";
+import {downloadApplicationThreePdf, downloadApplicationTwoPdf, GetApplicationApi} from "../../Api/UserApi.jsx";
+import {FaDownload} from "react-icons/fa";
 
 
 // const Transition = forwardRef(function Transition(props, ref) {
@@ -34,17 +35,19 @@ function ListApplication() {
     return (
 
         <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow">
+            <div className="bg-white rounded-lg shadow overflow-x-auto">
 
                 <div className="p-4">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Yuborilgan ariza</h2>
-                    <table className="w-full">
+                    <table className="w-full min-w-[600px]">
                         <thead>
                         <tr className="text-left bg-gray-50">
                             <th className="p-3 text-gray-600">Ariza raqami</th>
                             <th className="p-3 text-gray-600">Ta'lim yunalishi</th>
                             <th className="p-3 text-gray-600 ">Ta'lim turi</th>
                             <th className="p-3 text-gray-600 ">Izoh</th>
+                            <th className="p-3 text-gray-600 ">Ikki tamonlama shartnoma</th>
+                            <th className="p-3 text-gray-600 ">Uch tamonlama shartnoma</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -57,6 +60,22 @@ function ListApplication() {
                                 <td className="p-3 "><span className="text-green-600">Arizangiz qabul qilindi.</span>
                                     <br/> Imtihon vaqti to'g'risida qabul
                                     komissiyasi tomonidan qo'shimcha ma'lumot beriladi
+                                </td>
+                                <td>
+                                    <button
+                                        onClick={() => downloadApplicationTwoPdf()}
+                                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
+                                    >
+                                        <FaDownload/>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button
+                                        onClick={() => downloadApplicationThreePdf()}
+                                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
+                                    >
+                                        <FaDownload/>
+                                    </button>
                                 </td>
 
                             </tr>

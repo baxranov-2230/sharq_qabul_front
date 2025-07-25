@@ -7,21 +7,21 @@ import {
     Typography,
 } from "@material-tailwind/react";
 import {IMaskInput} from 'react-imask';
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 import toast from "react-hot-toast";
 import {useMutation} from "@tanstack/react-query";
 import {replace, useFormik} from "formik";
 import * as Yup from "yup";
-import {LoginApi} from "../Api/LoginApi";
+import {LoginApi, RegisterApi, ResetPasswordApi} from "../Api/LoginApi";
 import {LogIn} from 'lucide-react'
 import {GrHide} from "react-icons/gr";
 import {BiShow} from "react-icons/bi";
+import {FaArrowRightLong} from "react-icons/fa6";
 
 import Logo from "../assets/images/logo.png";
 import Sharq from "../assets/images/sharq.jpg";
-import {FaArrowRightLong} from "react-icons/fa6";
 
-export default function VerifySMS() {
+export default function ResetPasswordPage() {
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
@@ -29,9 +29,9 @@ export default function VerifySMS() {
     const togglePassword = () => {
         setShowPassword((prev) => !prev);
     };
-    const loginMutation = useMutation({
-        mutationKey: ["login-user"],
-        mutationFn: LoginApi,
+    const resetMutation = useMutation({
+        mutationKey: ["reset-user"],
+        mutationFn: ResetPasswordApi,
         onSuccess: (data) => {
             toast.success(data.message || "Successfully");
         },
@@ -39,30 +39,30 @@ export default function VerifySMS() {
             toast.error(error.message);
         },
     });
-    const isSuccess = loginMutation.isSuccess;
+
+    const isSuccess = resetMutation.isSuccess;
 
     useEffect(() => {
         if (isSuccess) {
-            navigate("/admin");
+            navigate("/login");
             window.location.reload();
         }
     }, [navigate, isSuccess]);
     const formik = useFormik({
         initialValues: {
-            username: "",
-            password: "",
+            verification_code: "",
+            new_password: "",
         },
         validationSchema: Yup.object({
-            username: Yup.string().required("Telefon raqami majburiy"),
-            // .matches(/^\+998\s\(\d{2}\)\s\d{3}-\d{2}-\d{2}$/, "Noto'g‘ri format"),
-            password: Yup.string().required("password is required"),
+            verification_code: Yup.string().required("Telefon raqami majburiy"),
+            new_password: Yup.string().required("password kiritish majburiy"),
         }),
         onSubmit: (values) => {
-            const loginDate = {
-                username: values.username,
-                password: values.password,
+            const resetData = {
+                verification_code: values.verification_code,
+                new_password: values.new_password,
             };
-            loginMutation.mutate(loginDate);
+            resetMutation.mutate(resetData);
         },
     });
     return (
@@ -75,7 +75,7 @@ export default function VerifySMS() {
                         <img src={Logo} className="w-44"/>
                     </div>
                     <h2 className="text-2xl font-bold text-center mb-6">
-                        SMS kodni tasdiqlash
+                        Parolni qayta tiklash
                     </h2>
 
 
@@ -87,8 +87,8 @@ export default function VerifySMS() {
                             <div className="relative">
                                 <input
                                     type={"text"}
-                                    name="password"
-                                    {...formik.getFieldProps("password")}
+                                    name="verification_code"
+                                    {...formik.getFieldProps("verification_code")}
                                     className=" w-full  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                                     required
                                 />
@@ -101,12 +101,33 @@ export default function VerifySMS() {
                                 </button>
                             </div>
                         </div>
+                        <div className="mb-6">
+                            <label className="block text-gray-700 text-sm font-semibold mb-2">
+                                Parol
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name="new_password"
+                                    {...formik.getFieldProps("new_password")}
+                                    className=" w-full  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={togglePassword}
+                                    className="absolute right-2 top-3 text-xl items-center  text-blue-500"
+                                >
+                                    {showPassword ? <GrHide/> : <BiShow/>}
+                                </button>
+                            </div>
+                        </div>
 
                         <button
                             type="submit"
                             className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 font-semibold"
                         >
-                            Tasdiqlash
+                            Tiklash
                         </button>
                     </form>
                     <div className="text-center mt-4">
