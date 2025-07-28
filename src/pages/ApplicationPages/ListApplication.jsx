@@ -12,7 +12,12 @@ import {
     Slide
 } from '@mui/material';
 import {MdCancel} from "react-icons/md";
-import {downloadApplicationThreePdf, downloadApplicationTwoPdf, GetApplicationApi} from "../../Api/UserApi.jsx";
+import {
+    downloadApplicationThreePdf,
+    downloadApplicationTwoPdf,
+    GetApplicationApi,
+    GetStatusConfirmApi
+} from "../../Api/UserApi.jsx";
 import {FaDownload} from "react-icons/fa";
 
 
@@ -29,6 +34,11 @@ function ListApplication() {
     const {isError, isSuccess, isLoading, data: applications, error, refetch} = useQuery({
         queryKey: ["list-application"],
         queryFn: GetApplicationApi,
+    });
+
+    const {data: statusConfirm, refetch: refetchConfirm} = useQuery({
+        queryKey: ["status-application"],
+        queryFn: GetStatusConfirmApi,
     });
 
 
@@ -48,6 +58,7 @@ function ListApplication() {
                             <th className="p-3 text-gray-600 ">Izoh</th>
                             <th className="p-3 text-gray-600 ">Ikki tamonlama shartnoma</th>
                             <th className="p-3 text-gray-600 ">Uch tamonlama shartnoma</th>
+                            <th className="p-3 text-gray-600 ">Tavsiya</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -62,20 +73,43 @@ function ListApplication() {
                                     komissiyasi tomonidan qo'shimcha ma'lumot beriladi
                                 </td>
                                 <td>
-                                    <button
-                                        onClick={() => downloadApplicationTwoPdf()}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
-                                    >
-                                        <FaDownload/>
-                                    </button>
+                                    {
+                                        statusConfirm === true ? (
+                                            <button
+                                                onClick={() => downloadApplicationTwoPdf(applications?.id)}
+                                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
+                                            >
+                                                <FaDownload/>
+                                            </button>
+                                        ) : (
+                                            <span className="text-yellow-600"> Jarayonda...</span>
+                                        )
+                                    }
                                 </td>
                                 <td>
-                                    <button
-                                        onClick={() => downloadApplicationThreePdf()}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
-                                    >
-                                        <FaDownload/>
-                                    </button>
+                                    {
+                                        statusConfirm === true ? (
+                                            <button
+                                                onClick={() => downloadApplicationThreePdf()}
+                                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
+                                            >
+                                                <FaDownload/>
+                                            </button>
+                                        ) : (
+                                            <span className="text-yellow-600"> Jarayonda...</span>
+                                        )
+                                    }
+
+                                </td>
+                                <td>
+                                    {
+                                        statusConfirm === true ? (
+                                            <span className="text-green-600">Siz talabalikka tavsiya etildingiz</span>
+                                        ) : (
+                                            <span className="text-yellow-600">Jarayonda...</span>
+                                        )
+                                    }
+
                                 </td>
 
                             </tr>

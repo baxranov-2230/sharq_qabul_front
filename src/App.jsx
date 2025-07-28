@@ -113,16 +113,9 @@ function App() {
                         <div className="flex items-center space-x-6 mr-10">
                             <div>
                                 <button
-                                    disabled={isDisabled}
-                                    className={` flex items-center space-x-2 px-4 py-2 rounded text-white ${
-                                        isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#154576] hover:bg-[#0361B9]'
-                                    }`}
+                                    className="flex items-center space-x-2 px-4 py-2 rounded text-white bg-[#154576] hover:bg-[#0361B9]"
                                 >
-                                    {!isDisabled ? (
-                                        <Link to="/create-application">Ariza yuborish</Link>
-                                    ) : (
-                                        <span>Ariza yuborilgan</span>
-                                    )}
+                                    <Link to="/create-application">Ariza yuborish</Link>
                                 </button>
                             </div>
                             <Bell className="h-5 w-5 cursor-pointer"/>

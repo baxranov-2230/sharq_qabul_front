@@ -15,13 +15,15 @@ export const GetPassportApi = async () => {
     }
 };
 
-export const GetStudyDirectionApi = async () => {
+export const GetStudyDirectionApi = async (study_form_id) => {
     try {
-        const study_direction = await axiosInstance.get(`${API_URL}/api/application/study_direction`,);
-        return study_direction.data;
+        const response = await axiosInstance.get(`${API_URL}/api/application/study_direction`, {
+            params: {study_form_id}
+        });
+        return response.data;
     } catch (error) {
         if (error.response?.status === 404) {
-            return null;
+            return [];
         }
         throw error;
     }
@@ -158,6 +160,18 @@ export const downloadApplicationThreePdf = async () => {
     } catch (error) {
         console.error("Faylni yuklab olishda xatolik:", error);
         alert("Faylni yuklab bo‘lmadi.");
+    }
+};
+
+export const GetStatusConfirmApi = async () => {
+    try {
+        const response = await axiosInstance.get(`${API_URL}/api/contract/get_status`,);
+        return response.data;
+    } catch (error) {
+        if (error.response?.status === 404) {
+            return null;
+        }
+        throw error;
     }
 };
 

@@ -22,7 +22,6 @@ function CreateStudyLanguage() {
     const navigate = useNavigate();
 
 
-
     const {isLoading: loadingStudyTypes, data: studyTypes} = useQuery({
         queryKey: ['study-type'],
         queryFn: GetStudyTypeApi,
@@ -43,10 +42,6 @@ function CreateStudyLanguage() {
         queryFn: GetEducationTypeApi,
     })
 
-    const {isLoading: loadingStudyDirections, data: studyDirections} = useQuery({
-        queryKey: ['study-direction'],
-        queryFn: GetStudyDirectionApi,
-    })
 
     const [filteredStudyForms, setFilteredStudyForms] = useState(studyForms);
 
@@ -109,7 +104,11 @@ function CreateStudyLanguage() {
         }
     }, [formik.values.study_type_id]);
 
-
+    const {data: studyDirections, isLoading: loadingStudyDirections} = useQuery({
+        queryKey: ['study-direction', formik.values.study_form_id],
+        queryFn: () => GetStudyDirectionApi(formik.values.study_form_id),
+        enabled: !!formik.values.study_form_id, // faqat tanlanganda ishlaydi
+    });
     return (<div className="space-y-6">
         <h2 className="text-2xl font-bold text-gray-800">Ariza yuborish</h2>
 
@@ -215,17 +214,18 @@ function CreateStudyLanguage() {
                             <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Ta'lim yunalishini
                                 tanlang</p>
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Ta'lim yunalishini tanlang</InputLabel>
+                                <InputLabel id="study-direction-select-label">Ta'lim yo'nalishini tanlang</InputLabel>
                                 <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
+                                    labelId="study-direction-select-label"
+                                    id="study-direction-select"
                                     value={formik.values.study_direction_id}
                                     label="study_direction_id"
                                     name="study_direction_id"
                                     onChange={formik.handleChange}
+                                    disabled={!formik.values.study_form_id}
                                 >
                                     {loadingStudyDirections ? (
-                                        <MenuItem disabled>Loading...</MenuItem>
+                                        <MenuItem disabled>Yuklanmoqda...</MenuItem>
                                     ) : (
                                         studyDirections?.map((studyDirection) => (
                                             <MenuItem key={studyDirection?.id} value={studyDirection?.id}>
@@ -235,21 +235,8 @@ function CreateStudyLanguage() {
                                     )}
                                 </Select>
                             </FormControl>
-                        </div>
-                        {/*<div className="w-full">*/}
-                        {/*    <FormControl>*/}
-                        {/*        <p className="mb-2 text-md font-medium text-gray-900 dark:text-white">Sertifikatingiz bormi?</p>*/}
-                        {/*        <RadioGroup*/}
-                        {/*            row*/}
-                        {/*            aria-labelledby="demo-row-radio-buttons-group-label"*/}
-                        {/*            name="row-radio-buttons-group"*/}
-                        {/*        >*/}
-                        {/*            <FormControlLabel value="yes" control={<Radio />} label="Yes" />*/}
-                        {/*            <FormControlLabel value="no" control={<Radio />} label="No" />*/}
 
-                        {/*        </RadioGroup>*/}
-                        {/*    </FormControl>*/}
-                        {/*</div>*/}
+                        </div>
 
 
                     </div>
