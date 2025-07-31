@@ -92,7 +92,7 @@ function CreateStudyLanguage() {
     useEffect(() => {
         if (isSuccess) {
             navigate("/list-application");
-            window.location.reload();
+            // window.location.reload();
         }
     }, [navigate, isSuccess]);
 
